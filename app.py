@@ -7,6 +7,7 @@ st.set_page_config(page_title="DataMorph JSON", layout="wide")
 st.title("🧪 DataMorph JSON")
 
 # 2. Datos de ejemplo iniciales (Esquema Flexible)
+# Estos datos cumplen con tener campos diferentes entre sí
 example_data = [
     {"id": 1, "nombre": "Luis Fernando", "ciudad": "Madrid"},
     {"id": 2, "nombre": "Ana Maria", "habilidades": ["AWS", "S3"]},
@@ -28,14 +29,14 @@ with col2:
     st.subheader("2. Tabla Normalizada (Pandas)")
     if json_input:
         try:
-            # Procesamiento de los datos
+            # Procesamiento de los datos (Paso A)
             data = json.loads(json_input)
             df = pd.json_normalize(data)
             
-            # Visualización de la tabla
+            # Visualización de la tabla (Actualizado a width='stretch')
             st.dataframe(df, width="stretch")
             
-            # 4. Analítica de Esquema (Paso B del laboratorio)
+            # 4. Analítica de Esquema (Paso B)
             st.markdown("---")
             st.subheader("📊 Analítica de Esquema")
             
@@ -48,7 +49,8 @@ with col2:
             if null_count > 0:
                 st.warning(
                     "⚠️ **Nota de Ingeniería:** Detectamos datos dispersos (Sparse Data). "
-                    "En SQL esto sería ineficiente, pero en NoSQL es normal."
+                    "En SQL esto sería ineficiente por reservar espacio para NULLs, "
+                    "pero en NoSQL es normal y no penaliza el almacenamiento."
                 )
 
         except json.JSONDecodeError:
@@ -56,7 +58,7 @@ with col2:
         except Exception as e:
             st.error(f"⚠️ Error inesperado: {e}")
 
-# 5. Explicación teórica (Paso C del laboratorio)
+# 5. Explicación teórica (Paso C)
 st.markdown("---")
 with st.expander("📚 Diferencia entre Esquemas"):
     st.markdown("""
