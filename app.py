@@ -2,18 +2,18 @@ import streamlit as st
 import pandas as pd
 import json
 
-# Configuración de página [cite: 62]
+# Configuración de página
 st.set_page_config(page_title="DataMorph JSON", layout="wide")
 st.title("🧪 DataMorph JSON")
 
-# JSON de ejemplo inicial con campos heterogéneos [cite: 17, 64]
+# JSON de ejemplo inicial
 example_data = [
     {"id": 1, "nombre": "Luis Fernando", "ciudad": "Madrid"},
     {"id": 2, "nombre": "Ana Maria", "habilidades": ["AWS", "S3"]},
     {"id": 3, "nombre": "Carlos", "detalles": {"rol": "Data Engineer"}}
 ]
 
-# Layout de dos columnas [cite: 17, 62]
+# Layout de dos columnas
 col1, col2 = st.columns(2)
 
 with col1:
@@ -26,15 +26,15 @@ with col1:
 
 with col2:
     st.subheader("2. Tabla Normalizada (Pandas)")
-    # Paso C: Gestión de Errores [cite: 21, 68]
     if json_input:
         try:
+            # Intentamos cargar el JSON
             data = json.loads(json_input)
-            # Paso A: Conversión con json_normalize [cite: 17, 64]
             df = pd.json_normalize(data)
+            
+            # Mostramos la tabla (usamos width='stretch' por la actualización de Streamlit)
             st.dataframe(df, use_container_width=True)
             
-            # Paso B: Analítica de Esquema [cite: 19, 66]
             st.markdown("---")
             st.subheader("📊 Analítica de Esquema")
             
@@ -47,18 +47,17 @@ with col2:
             if null_count > 0:
                 st.warning(
                     "⚠️ **Nota de Ingeniería:** Detectamos datos dispersos (Sparse Data). "
-                    "En SQL esto sería ineficiente por reservar espacio para NULLs, "
-                    "pero en NoSQL es normal y no penaliza el almacenamiento."
-                ) [cite: 19, 66]
+                    "En SQL esto sería ineficiente, pero en NoSQL es normal."
+                )
 
         except json.JSONDecodeError:
-            st.error("❌ Error: El formato JSON es inválido. Revisa las comas y llaves.") [cite: 21, 68]
+            st.error("❌ Error: El formato JSON es inválido. Revisa que cada campo y objeto esté separado por una coma.")
         except Exception as e:
             st.error(f"⚠️ Error inesperado: {e}")
 
-# Paso C: Expansor Comparativo [cite: 21, 68]
+# Expansor informativo al final
 with st.expander("📚 Diferencia entre Esquemas"):
     st.markdown("""
-    * **Esquema Fijo (SQL):** Como una 'cárcel'. Debes definir cada columna antes de insertar datos. [cite: 4, 51]
-    * **Esquema Flexible (NoSQL):** Dinámico. Si un registro tiene campos nuevos, se guardan sin afectar al resto. [cite: 5, 52]
+    * **Esquema Fijo (SQL):** Como una 'cárcel'. Debes definir cada columna antes de insertar datos.
+    * **Esquema Flexible (NoSQL):** Dinámico. Si un registro tiene campos nuevos, se guardan sin afectar al resto.
     """)
