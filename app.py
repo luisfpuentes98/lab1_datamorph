@@ -2,18 +2,18 @@ import streamlit as st
 import pandas as pd
 import json
 
-# Configuración de página
+# 1. Configuración de la aplicación
 st.set_page_config(page_title="DataMorph JSON", layout="wide")
 st.title("🧪 DataMorph JSON")
 
-# JSON de ejemplo inicial
+# 2. Datos de ejemplo iniciales (Esquema Flexible)
 example_data = [
     {"id": 1, "nombre": "Luis Fernando", "ciudad": "Madrid"},
     {"id": 2, "nombre": "Ana Maria", "habilidades": ["AWS", "S3"]},
     {"id": 3, "nombre": "Carlos", "detalles": {"rol": "Data Engineer"}}
 ]
 
-# Layout de dos columnas [cite: 17, 62]
+# 3. Creación de la interfaz en dos columnas
 col1, col2 = st.columns(2)
 
 with col1:
@@ -22,20 +22,20 @@ with col1:
         "Pega tu lista de objetos JSON aquí:",
         value=json.dumps(example_data, indent=4),
         height=400
-    ) [cite: 17, 63]
+    )
 
 with col2:
     st.subheader("2. Tabla Normalizada (Pandas)")
     if json_input:
         try:
+            # Procesamiento de los datos
             data = json.loads(json_input)
-            # Conversión de JSON a tabla plana [cite: 17, 64]
             df = pd.json_normalize(data)
             
-            # Ajuste de ancho según la versión 2026 de Streamlit
+            # Visualización de la tabla
             st.dataframe(df, width="stretch")
             
-            # Analítica de Esquema [cite: 19, 66]
+            # 4. Analítica de Esquema (Paso B del laboratorio)
             st.markdown("---")
             st.subheader("📊 Analítica de Esquema")
             
@@ -49,16 +49,17 @@ with col2:
                 st.warning(
                     "⚠️ **Nota de Ingeniería:** Detectamos datos dispersos (Sparse Data). "
                     "En SQL esto sería ineficiente, pero en NoSQL es normal."
-                ) [cite: 19, 66]
+                )
 
         except json.JSONDecodeError:
-            st.error("❌ Error: Formato JSON inválido.") [cite: 21, 68]
+            st.error("❌ Error: El formato JSON es inválido. Revisa las comas y llaves.")
         except Exception as e:
-            st.error(f"⚠️ Error: {e}")
+            st.error(f"⚠️ Error inesperado: {e}")
 
-# Explicación teórica final [cite: 21, 68]
+# 5. Explicación teórica (Paso C del laboratorio)
+st.markdown("---")
 with st.expander("📚 Diferencia entre Esquemas"):
     st.markdown("""
-    * **Esquema Fijo (SQL):** Rígido. No puedes guardar datos si no definiste la columna antes[cite: 4, 51].
-    * **Esquema Flexible (NoSQL):** Dinámico. Los campos nuevos se guardan sin afectar al resto[cite: 5, 52].
+    * **Esquema Fijo (SQL):** Como una 'cárcel'. Debes definir cada columna antes de insertar datos.
+    * **Esquema Flexible (NoSQL):** Dinámico. Si un registro tiene campos nuevos, se guardan sin afectar al resto.
     """)
